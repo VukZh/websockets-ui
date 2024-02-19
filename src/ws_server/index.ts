@@ -1,4 +1,5 @@
 import {WebSocketServer} from "ws";
+import parser from "./messageParser.ts";
 
 const wss = new WebSocketServer({port: 3000});
 
@@ -7,6 +8,8 @@ wss.on('connection', function connection(ws) {
 
   ws.on('message', function message(data) {
     console.log('received: %s', data);
+    // @ts-ignore
+    parser(data, ws);
   });
 
   ws.on('open', function open() {
@@ -19,5 +22,5 @@ wss.on('connection', function connection(ws) {
   });
 
 
-  ws.send('something');
+  // ws.send('something');
 });

@@ -6,15 +6,15 @@
     "type": "module",
     "scripts": {
         "start": "node ./index.js",
-        "start:dev": "nodemon ./index.js",
+        "start:dev": "nodemon -I --exec node --experimental-specifier-resolution=node  --loader ts-node/esm ./src/ws_server/index.ts",
         "WP:PROD": "webpack --env production",
-        "WP:DEV": "webpack --env development",
-        "start:dev": "nodemon -I --exec node --experimental-specifier-resolution=node  --loader ts-node/esm ./src/ws_server/index.ts"
+        "WP:DEV": "webpack --env development"
     },
     "author": "Andrei Auchynnikau",
     "keywords": [],
     "license": "ISC",
     "devDependencies": {
+        "@types/ws": "^8.5.10",
         "nodemon": "^2.0.16",
         "ts-loader": "^9.5.1",
         "ts-node": "^10.9.2",
