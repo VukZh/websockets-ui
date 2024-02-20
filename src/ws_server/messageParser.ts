@@ -1,10 +1,11 @@
 import {MessageType} from "./models/types.ts";
 import {RawData} from "ws";
 import {str, prs} from "./helpers.ts";
-import regHandler from "./handlers/reg.js";
-import createRoomHandler from "./handlers/createRoom.js";
-import clients from "./db/clients.js";
-import addUserHandler from "./handlers/addUserToRoom.js";
+import regHandler from "./handlers/reg.ts";
+import createRoomHandler from "./handlers/createRoom.ts";
+import clients from "./db/clients.ts";
+import addUserHandler from "./handlers/addUserToRoom.ts";
+import addShipsHandler from "./handlers/addShips.ts";
 
 const parser = (msg: RawData, id: number) => {
   clients[id].send("oops")
@@ -20,6 +21,8 @@ const parser = (msg: RawData, id: number) => {
       createRoomHandler(id);
     } else if (message?.type === MessageType.ADD_U && msgData?.indexRoom) {
       addUserHandler(msgData, id);
+    } else if (message?.type === MessageType.ADD_S && msgData?.gameId && msgData?.ships && msgData?.indexPlayer) {
+      addShipsHandler(msgData, id);
     }
   } catch (e) {
     console.log(e.message)

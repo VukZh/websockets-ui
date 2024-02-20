@@ -105,7 +105,7 @@ type PositionType = {
   y: number;
 }
 
-type ShipsUserType = {
+export type ShipsUserType = {
   position: PositionType;
   direction: boolean;
   length: number;
