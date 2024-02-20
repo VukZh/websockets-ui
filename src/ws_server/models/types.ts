@@ -27,9 +27,9 @@ enum StatusType {
 }
 
 export enum IndexedFieldsType {
-  user = "index",
-  room = "roomId",
-  game = "gameId",
+  USER = "index",
+  ROOM = "roomId",
+  GAME = "gameId",
 }
 
 // type UserTypeFEType = {
@@ -48,14 +48,14 @@ export type UserType = {
   name: string;
   password: string;
   index: IndexPlayerType;
-  roomId: RoomIdType;
-  gameId: GameIdType;
-  wins: number;
+  roomId?: RoomIdType;
+  gameId?: GameIdType;
+  wins?: number;
 }
 
 export type RoomType = {
   roomId: RoomIdType;
-  idGame: GameIdType;
+  idGame?: GameIdType;
   roomUsers: Array<Pick<UserType, "name" | "index">>
 }
 

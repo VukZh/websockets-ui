@@ -18,7 +18,12 @@ const prs = (str) => {
 
 const lastIndex = (arr: Array<UserType> | Array<RoomType> | Array<GameType>, indexField: IndexedFieldsType) => {
   const indexArray = arr.map(item => item[indexField]) as Array<number>;
-  return Math.max(...indexArray);
+  console.log("indexArray", indexArray, Math.max(...indexArray))
+  return indexArray.length ? Math.max(...indexArray) : 0;
 }
 
-export {str, prs, lastIndex};
+const getId = () => {
+  return Number(Math.random().toFixed(6).split(".")[1]);
+}
+
+export {str, prs, lastIndex, getId};

@@ -6,7 +6,7 @@
     "type": "module",
     "scripts": {
         "start": "node ./index.js",
-        "start:dev": "nodemon -I --exec node --experimental-specifier-resolution=node  --loader ts-node/esm ./src/ws_server/index.ts",
+        "start:WSServerDev": "nodemon -I --exec node --experimental-specifier-resolution=node  --loader ts-node/esm ./src/ws_server/index.ts",
         "WP:PROD": "webpack --env production",
         "WP:DEV": "webpack --env development"
     },
