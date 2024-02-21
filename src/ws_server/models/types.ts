@@ -13,7 +13,7 @@ export enum MessageType {
   FINISH = "finish",
 }
 
-enum ShipType {
+export enum ShipType {
   S = "small",
   M = "medium",
   L = "large",
@@ -114,6 +114,7 @@ export type ShipsUserType = {
 
 export type ShipsType = {
   ships: Array<ShipsUserType>;
+  openedShips: Array<Array<boolean>>
   gameId: GameIdType;
   indexPlayer: IndexPlayerType;
 }

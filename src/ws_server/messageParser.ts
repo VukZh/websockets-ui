@@ -6,6 +6,7 @@ import createRoomHandler from "./handlers/createRoom.ts";
 import clients from "./db/clients.ts";
 import addUserHandler from "./handlers/addUserToRoom.ts";
 import addShipsHandler from "./handlers/addShips.ts";
+import attackHandler from "./handlers/attack.js";
 
 const parser = (msg: RawData, id: number) => {
   clients[id].send("oops")
@@ -23,6 +24,8 @@ const parser = (msg: RawData, id: number) => {
       addUserHandler(msgData, id);
     } else if (message?.type === MessageType.ADD_S && msgData?.gameId && msgData?.ships && msgData?.indexPlayer) {
       addShipsHandler(msgData, id);
+    } else if (message?.type === MessageType.ATTACK && msgData?.gameId && msgData?.x >=0 && msgData?.y >=0 && msgData?.indexPlayer) {
+      attackHandler(msgData);
     }
   } catch (e) {
     console.log(e.message)

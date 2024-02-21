@@ -3,7 +3,7 @@ import shipsDB from "../db/ships.ts";
 import gamesDB from "../db/games.ts";
 
 import {IndexedFieldsType, MessageType, ShipsUserType, StatusType} from "../models/types.ts";
-import {lastIndex, str} from "../helpers.ts";
+import {lastIndex, prs, shipsMatrix, str} from "../helpers.ts";
 
 const addShipsHandler = (msgData: {
   gameId: number,
@@ -12,12 +12,15 @@ const addShipsHandler = (msgData: {
   shipsDB.push({
     gameId: msgData.gameId,
     ships: msgData.ships,
-    indexPlayer: id
+    indexPlayer: id,
+    openedShips: Array.from({length: 10}, () => Array.from({length: 10}).fill(false)) as Array<Array<boolean>>
   })
   console.log("ships", shipsDB)
 
   const getShipsFrom2Players = shipsDB.filter(s => s.gameId === msgData.gameId).length === 2;
   console.log("ships", shipsDB, getShipsFrom2Players)
+
+  console.log(">>>", msgData.ships, shipsMatrix(msgData.ships))
 
   if (getShipsFrom2Players) {
 
@@ -54,6 +57,20 @@ const addShipsHandler = (msgData: {
     })
 
     console.log("gamesDB", gamesDB)
+
+    // clientsDB[firstPlayerShips.indexPlayer].send(str({
+    //   type: MessageType.TURN,
+    //   data: str({
+    //     currentPlayer: firstPlayerShips.indexPlayer
+    //   })
+    // }));
+    //
+    // clientsDB[id].send(str({
+    //   type: MessageType.TURN,
+    //   data: str({
+    //     currentPlayer: firstPlayerShips.indexPlayer
+    //   })
+    // }));
   }
 
 }
