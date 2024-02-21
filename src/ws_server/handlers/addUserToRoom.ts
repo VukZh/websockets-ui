@@ -1,6 +1,6 @@
 import usersDB from "../db/players.ts";
 import roomsDB from "../db/rooms.ts";
-import clients from "../db/clients.ts";
+import clientsDB from "../db/clients.ts";
 import {lastIndex, str} from "../helpers.ts";
 import {IndexedFieldsType, MessageType} from "../models/types.ts";
 import gamesDB from "../db/games.ts";
@@ -14,12 +14,13 @@ const addUserHandler = (msgData: {
 
   const gameId = lastIndex(gamesDB, IndexedFieldsType.GAME) + 1;
 
-  roomsDB[foundRoomId].roomUsers = [...roomsDB[foundRoomId].roomUsers, {
-    name: addedUser.name,
-    index: id
-  }]
-
   if (id !== firstUserId) {
+
+    roomsDB[foundRoomId].roomUsers = [...roomsDB[foundRoomId].roomUsers, {
+      name: addedUser.name,
+      index: id
+    }]
+
     let data = {
       idGame: gameId,
       idPlayer: firstUserId
@@ -31,7 +32,7 @@ const addUserHandler = (msgData: {
       id: 0
     }
 
-    clients[firstUserId].send(str(wsMessage));
+    clientsDB[firstUserId].send(str(wsMessage));
 
     data = {
       idGame: gameId,
@@ -44,7 +45,7 @@ const addUserHandler = (msgData: {
       id: 0
     }
 
-    clients[id].send(str(wsMessage));
+    clientsDB[id].send(str(wsMessage));
   } else {
     throw new Error("you can't add yourself to your room yet")
   }

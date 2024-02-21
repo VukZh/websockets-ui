@@ -18,7 +18,7 @@ const prs = (str) => {
 
 const lastIndex = (arr: Array<UserType> | Array<RoomType> | Array<GameType>, indexField: IndexedFieldsType) => {
   const indexArray = arr.map(item => item[indexField]) as Array<number>;
-  console.log("indexArray", indexArray, Math.max(...indexArray))
+  console.log("indexArray", indexArray, indexField, Math.max(...indexArray))
   return indexArray.length ? Math.max(...indexArray) : 0;
 }
 

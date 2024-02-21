@@ -1,26 +1,27 @@
-import clients from "../db/clients.ts";
-import ships from "../db/ships.ts";
+import clientsDB from "../db/clients.ts";
+import shipsDB from "../db/ships.ts";
+import gamesDB from "../db/games.ts";
 
-import {MessageType, ShipsUserType} from "../models/types.ts";
-import {str} from "../helpers.ts";
+import {IndexedFieldsType, MessageType, ShipsUserType, StatusType} from "../models/types.ts";
+import {lastIndex, str} from "../helpers.ts";
 
 const addShipsHandler = (msgData: {
   gameId: number,
   ships: Array<ShipsUserType>,
 }, id: number) => {
-  ships.push({
+  shipsDB.push({
     gameId: msgData.gameId,
     ships: msgData.ships,
     indexPlayer: id
   })
-  console.log("ships", ships)
+  console.log("ships", shipsDB)
 
-  const getShipsFrom2Players = ships.filter(s => s.gameId === msgData.gameId).length === 2;
-  console.log("ships", ships, getShipsFrom2Players)
+  const getShipsFrom2Players = shipsDB.filter(s => s.gameId === msgData.gameId).length === 2;
+  console.log("ships", shipsDB, getShipsFrom2Players)
 
   if (getShipsFrom2Players) {
 
-    const firstPlayerShips = ships.find(s => s.gameId === msgData.gameId && s.indexPlayer !== id);
+    const firstPlayerShips = shipsDB.find(s => s.gameId === msgData.gameId && s.indexPlayer !== id);
 
     const wsMessage1 = {
       type: MessageType.START,
@@ -29,16 +30,30 @@ const addShipsHandler = (msgData: {
     }
 
     console.log(":>>>1", wsMessage1)
-    clients[firstPlayerShips.indexPlayer].send(str(wsMessage1));
+    clientsDB[firstPlayerShips.indexPlayer].send(str(wsMessage1));
 
     const wsMessage2 = {
       type: MessageType.START,
-      data: str({ships: msgData.ships, currentPlayerIndex: id}),
+      data: str({ships: msgData.ships, indexPlayer: id}),
       id: 0
     }
 
     console.log(":>>>2", wsMessage2)
-    clients[id].send(str(wsMessage2));
+    clientsDB[id].send(str(wsMessage2));
+
+    gamesDB.push({
+      gameId: lastIndex(gamesDB, IndexedFieldsType.GAME) + 1,
+      position: {
+        x: NaN,
+        y: NaN
+      },
+      indexPlayers: [firstPlayerShips.indexPlayer, id],
+      currentPlayer: firstPlayerShips.indexPlayer,
+      status: StatusType.SHOT,
+      winPlayer: NaN
+    })
+
+    console.log("gamesDB", gamesDB)
   }
 
 }

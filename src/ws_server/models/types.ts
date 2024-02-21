@@ -20,7 +20,7 @@ enum ShipType {
   H = "huge"
 }
 
-enum StatusType {
+export enum StatusType {
   MISS = "miss",
   KILLED = "killed",
   SHOT = "shot",

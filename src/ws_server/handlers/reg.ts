@@ -2,7 +2,7 @@ import {IndexedFieldsType, MessageType} from "../models/types.ts";
 import {lastIndex, str} from "../helpers.ts";
 import usersDB from "../db/players.ts";
 import roomsDB from "../db/rooms.ts";
-import clients from "../db/clients.ts";
+import clientsDB from "../db/clients.ts";
 
 const regHandler = (msgData: {
   name: string,
@@ -38,7 +38,8 @@ const regHandler = (msgData: {
     id: 0
   }
   console.log("..>>..", wsMessage, data, usersDB)
-  clients[id].send(str(wsMessage));
+  clientsDB[id].send(str(wsMessage));
+  console.log("rooms in reg", roomsDB)
 
   const noFullRoom = roomsDB.find((r) => r.roomUsers.length === 1);
   console.log("noFullRoom", noFullRoom);
@@ -52,7 +53,7 @@ const regHandler = (msgData: {
       data: str(data),
       id: 0
     }
-    clients[id].send(str(wsMessage));
+    clientsDB[id].send(str(wsMessage));
   }
 }
 

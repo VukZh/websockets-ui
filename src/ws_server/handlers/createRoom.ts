@@ -2,7 +2,7 @@ import usersDB from "../db/players.ts";
 import roomsDB from "../db/rooms.ts";
 import {lastIndex, str} from "../helpers.ts";
 import {IndexedFieldsType, MessageType} from "../models/types.ts";
-import clients from "../db/clients.ts";
+import clientsDB from "../db/clients.ts";
 
 const createRoomHandler = (id: number) => {
   const lastUser = usersDB[usersDB.length - 1];
@@ -25,7 +25,7 @@ const createRoomHandler = (id: number) => {
     }
     console.log("..>>>..", wsMessage, data, roomsDB);
     roomsDB.push(...data);
-    clients[id].send(str(wsMessage));
+    clientsDB[id].send(str(wsMessage));
   } else {
     throw new Error("multiple rooms for 1 player are not allowed")
   }
