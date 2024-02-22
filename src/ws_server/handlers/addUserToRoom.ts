@@ -46,6 +46,31 @@ const addUserHandler = (msgData: {
     }
 
     clientsDB[id].send(str(wsMessage));
+
+    const foundRoomIdNext = roomsDB.findIndex(r => r.roomUsers.some(r => r.index === id))
+    roomsDB.splice(foundRoomIdNext, 1);
+
+    if (roomsDB.length) {
+      const allRoomsData = []
+      roomsDB.forEach((r => {
+        const data = {
+          roomId: r.roomId,
+          roomUsers: [...r.roomUsers],
+        };
+        allRoomsData.push(data)
+      }))
+
+      const wsMessage = {
+        type: MessageType.UPDATE_R,
+        data: str(allRoomsData),
+        id: 0
+      }
+      for (const key in clientsDB) {
+        clientsDB[key].send(str(wsMessage));
+      }
+
+    }
+
   } else {
     throw new Error("you can't add yourself to your room yet")
   }

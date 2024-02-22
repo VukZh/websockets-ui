@@ -11,18 +11,19 @@ const attackHandler = (msgData: {
   y: number,
   indexPlayer: number,
 }) => {
-  console.log("1")
+
   const currentGame = gamesDB.find(g => g.gameId === msgData.gameId);
   const oppositeShips = shipsDB.find(s => s.gameId === msgData.gameId && s.indexPlayer !== msgData.indexPlayer)
-  console.log(">", currentGame.currentPlayer, msgData.indexPlayer, !oppositeShips.openedShips[msgData.x][msgData.y])
-  if (currentGame.currentPlayer === msgData.indexPlayer && !oppositeShips.openedShips[msgData.x][msgData.y]) {
+  console.log("1", msgData.indexPlayer, currentGame.currentPlayer[0], currentGame)
+  // console.log(">", currentGame.currentPlayer, msgData.indexPlayer, !oppositeShips.openedShips[msgData.x][msgData.y])
+  if (currentGame.currentPlayer[0] === msgData.indexPlayer && !oppositeShips.openedShips[msgData.x][msgData.y]) {
     console.log("111111111111111111111")
     oppositeShips.openedShips[msgData.x][msgData.y] = true;
     console.log("2222222222222222222222")
     // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", oppositeShips.openedShips)
     // console.log("shipsDB", shipsDB)
-    const getState = stateShip(msgData.x, msgData.y, shipsMatrix(oppositeShips.ships), oppositeShips.openedShips).state
-    if (getState !== StatusType.KILLED) {
+    const attackState = stateShip(msgData.x, msgData.y, shipsMatrix(oppositeShips.ships), oppositeShips.openedShips).state
+    if (attackState !== StatusType.KILLED) {
       const wsMessage = {
         type: MessageType.ATTACK,
         data: str({
@@ -31,7 +32,7 @@ const attackHandler = (msgData: {
             y: msgData.y,
           },
           currentPlayer: msgData.indexPlayer,
-          status: getState
+          status: attackState
         }),
         id: 0
       }
@@ -48,7 +49,7 @@ const attackHandler = (msgData: {
               y: c[1],
             },
             currentPlayer: msgData.indexPlayer,
-            status: getState
+            status: attackState
           }),
           id: 0
         }
@@ -86,11 +87,27 @@ const attackHandler = (msgData: {
       }
       clientsDB[msgData.indexPlayer].send(str(wsMessage));
       clientsDB[oppositeShips.indexPlayer].send(str(wsMessage));
+    } else {
+      console.log("attackState", attackState)
+      if (attackState === StatusType.MISS) {
+        console.log("TURN");
+        const wsMessage = {
+          type: MessageType.TURN,
+          data: str({
+            currentPlayer: msgData.indexPlayer ? oppositeShips.indexPlayer : msgData.indexPlayer
+          }),
+          id: 0
+        }
+        clientsDB[msgData.indexPlayer].send(str(wsMessage));
+        clientsDB[oppositeShips.indexPlayer].send(str(wsMessage));
+        console.log("2", oppositeShips.indexPlayer);
+        currentGame.currentPlayer[0] = oppositeShips.indexPlayer;
+      }
     }
 
 
   } else {
-    throw new Error("not your move")
+    throw new Error("false move")
   }
 
 }

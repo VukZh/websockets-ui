@@ -9,7 +9,7 @@ import addShipsHandler from "./handlers/addShips.ts";
 import attackHandler from "./handlers/attack.js";
 
 const parser = (msg: RawData, id: number) => {
-  clients[id].send("oops")
+  // clients[id].send("oops")
   try {
     // @ts-ignore
     const message = prs(msg);

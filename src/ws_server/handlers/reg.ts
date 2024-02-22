@@ -51,7 +51,7 @@ const regHandler = (msgData: {
     const wsMessage = {
       type: MessageType.UPDATE_R,
       data: str(data),
-      id: 0
+      id: roomsDB.length - 1
     }
     clientsDB[id].send(str(wsMessage));
   }

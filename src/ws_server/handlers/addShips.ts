@@ -4,6 +4,7 @@ import gamesDB from "../db/games.ts";
 
 import {IndexedFieldsType, MessageType, ShipsUserType, StatusType} from "../models/types.ts";
 import {lastIndex, prs, shipsMatrix, str} from "../helpers.ts";
+import roomsDB from "../db/rooms.js";
 
 const addShipsHandler = (msgData: {
   gameId: number,
@@ -52,12 +53,54 @@ const addShipsHandler = (msgData: {
         y: NaN
       },
       indexPlayers: [firstPlayerShips.indexPlayer, id],
-      currentPlayer: firstPlayerShips.indexPlayer,
+      currentPlayer: [firstPlayerShips.indexPlayer],
       status: StatusType.SHOT,
       winPlayer: NaN
     })
 
-    console.log("gamesDB", gamesDB)
+    // console.log("gamesDB", gamesDB)
+
+    const foundRoomId = roomsDB.findIndex(r => r.roomUsers.some(r => r.index === id))
+    roomsDB.splice(foundRoomId, 1);
+    console.log("del ", foundRoomId, roomsDB);
+
+
+    if (roomsDB.length) {
+      const allRoomsData = []
+      roomsDB.forEach((r => {
+        const data = {
+          roomId: r.roomId,
+          roomUsers: [...r.roomUsers],
+        };
+        allRoomsData.push(data)
+      }))
+
+      const wsMessage = {
+        type: MessageType.UPDATE_R,
+        data: str(allRoomsData),
+        id: 0
+      }
+      for (const key in clientsDB) {
+        clientsDB[key].send(str(wsMessage));
+      }
+
+    } else {
+      const wsMessage = {
+        type: MessageType.UPDATE_R,
+        data: str([]),
+        id: 0
+      }
+      // clientsDB[firstPlayerShips.indexPlayer].send(str(wsMessage));
+      // clientsDB[id].send(str(wsMessage));
+
+      for (const key in clientsDB) {
+        clientsDB[key].send(str(wsMessage));
+      }
+
+    }
+
+
+
 
     // clientsDB[firstPlayerShips.indexPlayer].send(str({
     //   type: MessageType.TURN,

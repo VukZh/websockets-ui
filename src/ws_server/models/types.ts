@@ -63,7 +63,7 @@ export type GameType = {
   gameId: GameIdType;
   position: PositionType;
   indexPlayers: Array<IndexPlayerType>;
-  currentPlayer: IndexPlayerType;
+  currentPlayer: [IndexPlayerType];
   status: StatusType;
   winPlayer: IndexPlayerType;
 }
