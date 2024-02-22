@@ -32,10 +32,12 @@ const attackHandler = (msgData: {
           },
           currentPlayer: msgData.indexPlayer,
           status: getState
-        })
+        }),
+        id: 0
       }
       clientsDB[msgData.indexPlayer].send(str(wsMessage));
     } else {
+      oppositeShips.killed++;
       const sheepCoordinates = stateShip(msgData.x, msgData.y, shipsMatrix(oppositeShips.ships), oppositeShips.openedShips).sheep;
       sheepCoordinates.forEach(c => {
         const wsMessage = {
@@ -47,7 +49,8 @@ const attackHandler = (msgData: {
             },
             currentPlayer: msgData.indexPlayer,
             status: getState
-          })
+          }),
+          id: 0
         }
         clientsDB[msgData.indexPlayer].send(str(wsMessage));
       })
@@ -63,13 +66,27 @@ const attackHandler = (msgData: {
             },
             currentPlayer: msgData.indexPlayer,
             status: StatusType.MISS
-          })
+          }),
+          id: 0
         }
         clientsDB[msgData.indexPlayer].send(str(wsMessage));
       })
     }
     // console.log("getState", getState)
 
+    console.log("oppositeShips.killed", oppositeShips.killed);
+
+    if (oppositeShips.killed === 10) {
+      const wsMessage = {
+        type: MessageType.FINISH,
+        data: str({
+          winPlayer: msgData.indexPlayer
+        }),
+        id: 0
+      }
+      clientsDB[msgData.indexPlayer].send(str(wsMessage));
+      clientsDB[oppositeShips.indexPlayer].send(str(wsMessage));
+    }
 
 
   } else {

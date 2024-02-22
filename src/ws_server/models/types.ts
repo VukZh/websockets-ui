@@ -117,6 +117,7 @@ export type ShipsType = {
   openedShips: Array<Array<boolean>>
   gameId: GameIdType;
   indexPlayer: IndexPlayerType;
+  killed: number;
 }
 
 // type AttackFEType = {

@@ -13,7 +13,8 @@ const addShipsHandler = (msgData: {
     gameId: msgData.gameId,
     ships: msgData.ships,
     indexPlayer: id,
-    openedShips: Array.from({length: 10}, () => Array.from({length: 10}).fill(false)) as Array<Array<boolean>>
+    openedShips: Array.from({length: 10}, () => Array.from({length: 10}).fill(false)) as Array<Array<boolean>>,
+    killed: 0
   })
   console.log("ships", shipsDB)
 
