@@ -10,26 +10,43 @@ const attackHandler = (msgData: {
   x: number,
   y: number,
   indexPlayer: number,
-}) => {
+}, isRandom = false) => {
 
   const currentGame = gamesDB.find(g => g.gameId === msgData.gameId);
   const oppositeShips = shipsDB.find(s => s.gameId === msgData.gameId && s.indexPlayer !== msgData.indexPlayer)
   console.log("1", msgData.indexPlayer, currentGame.currentPlayer[0], currentGame)
   // console.log(">", currentGame.currentPlayer, msgData.indexPlayer, !oppositeShips.openedShips[msgData.x][msgData.y])
-  if (currentGame.currentPlayer[0] === msgData.indexPlayer && !oppositeShips.openedShips[msgData.x][msgData.y]) {
+
+  let x = msgData.x;
+  let y = msgData.y;
+  if (isRandom) {
+    const closedCell = [];
+    for (let i = 0; i < 10; i++) {
+      for (let j = 0; j < 10; j++) {
+        if (!oppositeShips.openedShips[i][j]) {
+          closedCell.push([i, j]);
+        }
+      }
+    }
+    const randomCell = Math.floor(Math.random() * closedCell.length);
+    x = closedCell[randomCell][0];
+    y = closedCell[randomCell][1];
+  }
+
+  if (currentGame.currentPlayer[0] === msgData.indexPlayer && !oppositeShips.openedShips[x][y]) {
     console.log("111111111111111111111")
-    oppositeShips.openedShips[msgData.x][msgData.y] = true;
+    oppositeShips.openedShips[x][y] = true;
     console.log("2222222222222222222222")
     // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", oppositeShips.openedShips)
     // console.log("shipsDB", shipsDB)
-    const attackState = stateShip(msgData.x, msgData.y, shipsMatrix(oppositeShips.ships), oppositeShips.openedShips).state
+    const attackState = stateShip(x, y, shipsMatrix(oppositeShips.ships), oppositeShips.openedShips).state
     if (attackState !== StatusType.KILLED) {
       const wsMessage = {
         type: MessageType.ATTACK,
         data: str({
           position: {
-            x: msgData.x,
-            y: msgData.y,
+            x: x,
+            y: y,
           },
           currentPlayer: msgData.indexPlayer,
           status: attackState
@@ -39,7 +56,7 @@ const attackHandler = (msgData: {
       clientsDB[msgData.indexPlayer].send(str(wsMessage));
     } else {
       oppositeShips.killed++;
-      const sheepCoordinates = stateShip(msgData.x, msgData.y, shipsMatrix(oppositeShips.ships), oppositeShips.openedShips).sheep;
+      const sheepCoordinates = stateShip(x, y, shipsMatrix(oppositeShips.ships), oppositeShips.openedShips).sheep;
       sheepCoordinates.forEach(c => {
         const wsMessage = {
           type: MessageType.ATTACK,

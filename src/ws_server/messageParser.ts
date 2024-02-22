@@ -26,6 +26,8 @@ const parser = (msg: RawData, id: number) => {
       addShipsHandler(msgData, id);
     } else if (message?.type === MessageType.ATTACK && msgData?.gameId && msgData?.x >=0 && msgData?.y >=0 && msgData?.indexPlayer) {
       attackHandler(msgData);
+     } else if (message?.type === MessageType.ATTACK_R && msgData?.gameId && msgData?.indexPlayer) {
+      attackHandler(msgData, true);
     }
   } catch (e) {
     console.log(e.message)

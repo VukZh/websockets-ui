@@ -14,6 +14,8 @@ const regHandler = (msgData: {
   let errorText = "";
   let index = NaN;
 
+  console.log("usersDB", usersDB)
+
   if (userExists) {
     error = true;
     errorText = "user exists";
