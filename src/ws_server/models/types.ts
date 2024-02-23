@@ -51,6 +51,8 @@ export type UserType = {
   roomId?: RoomIdType;
   gameId?: GameIdType;
   wins: number;
+  isActive: boolean
+
 }
 
 export type RoomType = {

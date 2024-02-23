@@ -9,25 +9,45 @@ const regHandler = (msgData: {
   password: string
 }, id: number) => {
 
-  const userExists = usersDB.some(u => u.name === msgData.name && u.password === msgData.password);
+  const existedUser = usersDB.find(u => u.name === msgData.name)
+
+  const wrongPass = existedUser && existedUser.password !== msgData.password;
+  const activeUser = existedUser && existedUser.isActive === true;
   let error = false;
   let errorText = "";
   let index = NaN;
 
   console.log("usersDB", usersDB)
 
-  if (userExists) {
+  if (wrongPass) {
     error = true;
-    errorText = "user exists";
+    errorText = "wrong password";
+  } else if (activeUser) {
+    error = true;
+    errorText = "user is playing now";
   } else {
     index = id;
     usersDB.push({
       name: msgData.name,
       password: msgData.password,
       index: index,
-      wins: 0
+      wins: 0,
+      isActive: true
     })
   }
+
+  // if (userExists) {
+  //   error = true;
+  //   errorText = "user exists";
+  // } else {
+  //   index = id;
+  //   usersDB.push({
+  //     name: msgData.name,
+  //     password: msgData.password,
+  //     index: index,
+  //     wins: 0
+  //   })
+  // }
 
   const data = {
     name: msgData.name,

@@ -2,6 +2,7 @@ import {WebSocketServer} from "ws";
 import parser from "./messageParser.ts";
 import {getId} from "./helpers.js";
 import clients from "./db/clients.js";
+import usersDB from "./db/players.ts";
 
 const wss = new WebSocketServer({port: 3000});
 
@@ -13,20 +14,14 @@ wss.on('connection', function connection(ws) {
   ws.on('error', console.error);
 
   ws.on('message', function message(data) {
-    console.log('received: %s', data);
-    // @ts-ignore
     parser(data, wsId);
   });
 
-  ws.on('open', function open() {
-    console.log('connected');
-    ws.send(Date.now());
+  ws.on('close', function close(e) {
+    delete clients[wsId];
+    const closedUser = usersDB.find(u => u.index === wsId);
+    if (closedUser) {
+      closedUser.isActive = false;
+    }
   });
-
-  ws.on('close', function close() {
-    console.log('close');
-  });
-
-
-  // ws.send('something');
 });
