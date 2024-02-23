@@ -66,7 +66,7 @@ const addShipsHandler = (msgData: {
 
 
     if (roomsDB.length) {
-      const allRoomsData = []
+      const allRoomsData = [];
       roomsDB.forEach((r => {
         const data = {
           roomId: r.roomId,

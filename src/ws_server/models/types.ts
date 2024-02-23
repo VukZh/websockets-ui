@@ -50,7 +50,7 @@ export type UserType = {
   index: IndexPlayerType;
   roomId?: RoomIdType;
   gameId?: GameIdType;
-  wins?: number;
+  wins: number;
 }
 
 export type RoomType = {

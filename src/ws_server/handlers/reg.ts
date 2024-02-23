@@ -24,7 +24,8 @@ const regHandler = (msgData: {
     usersDB.push({
       name: msgData.name,
       password: msgData.password,
-      index: index
+      index: index,
+      wins: 0
     })
   }
 

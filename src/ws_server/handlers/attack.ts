@@ -1,5 +1,6 @@
 import gamesDB from "../db/games.ts";
 import shipsDB from "../db/ships.ts";
+import usersDB from "../db/players.ts";
 import {additionalFields, shipsMatrix, stateShip, str} from "../helpers.js";
 import {MessageType, StatusType} from "../models/types.js";
 import clientsDB from "../db/clients.js";
@@ -104,6 +105,26 @@ const attackHandler = (msgData: {
       }
       clientsDB[msgData.indexPlayer].send(str(wsMessage));
       clientsDB[oppositeShips.indexPlayer].send(str(wsMessage));
+      usersDB.find(u => u.index === msgData.indexPlayer).wins++;
+      console.log("2", usersDB);
+      const usersData = [];
+      usersDB.sort((a,b) => b.wins - a.wins).forEach(u => {
+        usersData.push({
+          name: u.name,
+          wins: u.wins
+        })
+      })
+      const wsWinMessage = {
+        type: MessageType.UPDATE,
+        data: str(usersData),
+        id: 0
+      }
+
+
+      for (const key in clientsDB) {
+        clientsDB[key].send(str(wsWinMessage));
+      }
+      // const wsWinMessage =
     } else {
       console.log("attackState", attackState)
       if (attackState === StatusType.MISS) {
@@ -117,8 +138,18 @@ const attackHandler = (msgData: {
         }
         clientsDB[msgData.indexPlayer].send(str(wsMessage));
         clientsDB[oppositeShips.indexPlayer].send(str(wsMessage));
-        console.log("2", oppositeShips.indexPlayer);
+        // console.log("2", oppositeShips.indexPlayer);
         currentGame.currentPlayer[0] = oppositeShips.indexPlayer;
+      } else {
+        const wsMessage = {
+          type: MessageType.TURN,
+          data: str({
+            currentPlayer: msgData.indexPlayer ? msgData.indexPlayer : oppositeShips.indexPlayer
+          }),
+          id: 0
+        }
+        clientsDB[msgData.indexPlayer].send(str(wsMessage));
+        clientsDB[oppositeShips.indexPlayer].send(str(wsMessage));
       }
     }
 
