@@ -15,8 +15,6 @@ const attackHandler = (msgData: {
 
   const currentGame = gamesDB.find(g => g.gameId === msgData.gameId);
   const oppositeShips = shipsDB.find(s => s.gameId === msgData.gameId && s.indexPlayer !== msgData.indexPlayer)
-  console.log("1", msgData.indexPlayer, currentGame.currentPlayer[0], currentGame)
-  // console.log(">", currentGame.currentPlayer, msgData.indexPlayer, !oppositeShips.openedShips[msgData.x][msgData.y])
 
   let x = msgData.x;
   let y = msgData.y;
@@ -35,11 +33,9 @@ const attackHandler = (msgData: {
   }
 
   if (currentGame.currentPlayer[0] === msgData.indexPlayer && !oppositeShips.openedShips[x][y]) {
-    console.log("111111111111111111111")
+
     oppositeShips.openedShips[x][y] = true;
-    console.log("2222222222222222222222")
-    // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", oppositeShips.openedShips)
-    // console.log("shipsDB", shipsDB)
+
     const attackState = stateShip(x, y, shipsMatrix(oppositeShips.ships), oppositeShips.openedShips).state
     if (attackState !== StatusType.KILLED) {
       const wsMessage = {
@@ -73,7 +69,6 @@ const attackHandler = (msgData: {
         }
         clientsDB[msgData.indexPlayer].send(str(wsMessage));
       })
-      console.log("additionalFields", additionalFields(sheepCoordinates));
       additionalFields(sheepCoordinates).forEach(a => {
         oppositeShips.openedShips[a[0]][a[1]] = true;
         const wsMessage = {
@@ -91,9 +86,6 @@ const attackHandler = (msgData: {
         clientsDB[msgData.indexPlayer].send(str(wsMessage));
       })
     }
-    // console.log("getState", getState)
-
-    console.log("oppositeShips.killed", oppositeShips.killed);
 
     if (oppositeShips.killed === 10) {
       const wsMessage = {
@@ -106,7 +98,6 @@ const attackHandler = (msgData: {
       clientsDB[msgData.indexPlayer].send(str(wsMessage));
       clientsDB[oppositeShips.indexPlayer].send(str(wsMessage));
       usersDB.find(u => u.index === msgData.indexPlayer).wins++;
-      console.log("2", usersDB);
       const usersData = [];
       usersDB.sort((a,b) => b.wins - a.wins).forEach(u => {
         usersData.push({
@@ -120,15 +111,11 @@ const attackHandler = (msgData: {
         id: 0
       }
 
-
       for (const key in clientsDB) {
         clientsDB[key].send(str(wsWinMessage));
       }
-      // const wsWinMessage =
     } else {
-      console.log("attackState", attackState)
       if (attackState === StatusType.MISS) {
-        console.log("TURN");
         const wsMessage = {
           type: MessageType.TURN,
           data: str({
@@ -138,7 +125,6 @@ const attackHandler = (msgData: {
         }
         clientsDB[msgData.indexPlayer].send(str(wsMessage));
         clientsDB[oppositeShips.indexPlayer].send(str(wsMessage));
-        // console.log("2", oppositeShips.indexPlayer);
         currentGame.currentPlayer[0] = oppositeShips.indexPlayer;
       } else {
         const wsMessage = {

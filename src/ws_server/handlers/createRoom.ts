@@ -5,7 +5,6 @@ import {IndexedFieldsType, MessageType} from "../models/types.ts";
 import clientsDB from "../db/clients.ts";
 
 const createRoomHandler = (id: number) => {
-  // const lastUser = usersDB[usersDB.length - 1];
   const foundUser = usersDB.find(u => u.index === id);
   const index = lastIndex(roomsDB, IndexedFieldsType.ROOM) + 1;
   const data = [{
@@ -19,13 +18,7 @@ const createRoomHandler = (id: number) => {
   }]
   const foundRoomId = roomsDB.findIndex(r => r.roomUsers[0].index === id);
   if (foundRoomId === -1) {
-    // const wsMessage = {
-    //   type: MessageType.UPDATE_R,
-    //   data: str(data),
-    //   id: 0
-    // }
     roomsDB.push(...data);
-    // console.log("..>>>..", wsMessage, data, roomsDB);
 
     const allRoomsData = []
     roomsDB.forEach((r => {
@@ -44,14 +37,6 @@ const createRoomHandler = (id: number) => {
     for (const key in clientsDB) {
       clientsDB[key].send(str(wsMessage));
     }
-
-    // for (const key in clientsDB) {
-    //   clientsDB[key].send(str(wsMessage));
-    // }
-    // clientsDB[id].send(str(wsMessage));
-    // Object.keys(clientsDB).forEach((c => {
-    //   clientsDB[c].send(str(wsMessage));
-    // }))
   } else {
     throw new Error("multiple rooms for 1 player are not allowed")
   }

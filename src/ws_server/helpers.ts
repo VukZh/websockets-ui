@@ -18,7 +18,6 @@ const prs = (str) => {
 
 const lastIndex = (arr: Array<UserType> | Array<RoomType> | Array<GameType>, indexField: IndexedFieldsType) => {
   const indexArray = arr.map(item => item[indexField]) as Array<number>;
-  console.log("indexArray", indexArray, indexField, Math.max(...indexArray))
   return indexArray.length ? Math.max(...indexArray) : 0;
 }
 
@@ -36,42 +35,17 @@ const shipsMatrix = (ships: Array<ShipsUserType>): Array<Array<boolean>> => {
     if (isVertical) {
       for (let i = 0; i < length; i++) {
         matrix[x][y + i] = true;
-        // console.log("v", x, y + i)
       }
     } else {
       for (let i = 0; i < length; i++) {
         matrix[x + i][y] = true;
-        // console.log("h", x + i, y)
       }
     }
   })
   return matrix as Array<Array<boolean>>;
 }
 
-// const setOpenedMatrix = (x: number, y: number, opened: Array<Array<boolean>>) => {
-//   opened[x][y] = true;
-//   return [...opened];
-// };
-//
-// const stateShip = (x: number, y: number, matrix: Array<Array<boolean>>, opened: Array<Array<boolean>>) => {
-//   let state = StatusType.MISS;
-//   if (!opened[x][y] && matrix[x][y] === true) {
-//     state = StatusType.SHOT;
-//     if (x - 1 >= 0 && (opened[x - 1][y] && matrix[x - 1][y] === true || !opened[x - 1][y] && matrix[x - 1][y] === false)) {
-//       if (x + 1 <= 9 && (opened[x + 1][y] && matrix[x + 1][y] === true || !opened[x + 1][y] && matrix[x + 1][y] === false)) {
-//         if (y - 1 >= 0 && (opened[x][y - 1] && matrix[x][y - 1] === true || !opened[x][y - 1] && matrix[x][y - 1] === false)) {
-//           if (y + 1 <= 9 && (opened[x][y + 1] && matrix[x][y + 1] === true || !opened[x][y + 1] && matrix[x][y + 1] === false)) {
-//             state = StatusType.KILLED;
-//           }
-//         }
-//       }
-//     }
-//   }
-//   return state;
-// }
-
 const stateShip = (x: number, y: number, matrix: Array<Array<boolean>>, openedMatrix: Array<Array<boolean>>) => {
-  console.log("openedMatrix", openedMatrix)
   let state = StatusType.MISS;
   const sheep = [[x, y]];
   if (matrix[x][y] === true) {
@@ -117,22 +91,9 @@ const stateShip = (x: number, y: number, matrix: Array<Array<boolean>>, openedMa
         break;
       }
     }
-    console.log("SSSSheep", sheep, shotCount)
-
     if (sheep.length === shotCount) {
       state = StatusType.KILLED;
     }
-
-    // state = StatusType.SHOT;
-    // if ((x - 1 >= 0 && matrix[x - 1][y] === false) || (x - 1 < 0)) {
-    //   if ((x + 1 <= 9 && matrix[x + 1][y] === false) || (x + 1 > 9) ) {
-    //     if ((y - 1 >= 0 && matrix[x][y - 1] === false) || (y - 1 < 0)) {
-    //       if ((y + 1 <= 9 && matrix[x][y + 1] === false) || (y + 1 > 9)) {
-    //         state = StatusType.KILLED;
-    //       }
-    //     }
-    //   }
-    // }
   }
   return {
     state: state,
@@ -150,8 +111,6 @@ const additionalFields = (coordinates: number[][]) => {
   maxX = maxX > 9 ? 9 : maxX;
   minY = minY < 0 ? 0 : minY;
   maxY = maxY > 9 ? 9 : maxY;
-
-  console.log("...", coordinates, minX, maxX, minY, maxY)
 
   const result = [];
   for (let xx = minX; xx <= maxX; xx++) {

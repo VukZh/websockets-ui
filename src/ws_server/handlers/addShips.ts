@@ -3,7 +3,7 @@ import shipsDB from "../db/ships.ts";
 import gamesDB from "../db/games.ts";
 
 import {IndexedFieldsType, MessageType, ShipsUserType, StatusType} from "../models/types.ts";
-import {lastIndex, prs, shipsMatrix, str} from "../helpers.ts";
+import {lastIndex, str} from "../helpers.ts";
 import roomsDB from "../db/rooms.js";
 
 const addShipsHandler = (msgData: {
@@ -17,12 +17,8 @@ const addShipsHandler = (msgData: {
     openedShips: Array.from({length: 10}, () => Array.from({length: 10}).fill(false)) as Array<Array<boolean>>,
     killed: 0
   })
-  console.log("ships", shipsDB)
 
   const getShipsFrom2Players = shipsDB.filter(s => s.gameId === msgData.gameId).length === 2;
-  console.log("ships", shipsDB, getShipsFrom2Players)
-
-  console.log(">>>", msgData.ships, shipsMatrix(msgData.ships))
 
   if (getShipsFrom2Players) {
 
@@ -34,7 +30,6 @@ const addShipsHandler = (msgData: {
       id: 0
     }
 
-    console.log(":>>>1", wsMessage1)
     clientsDB[firstPlayerShips.indexPlayer].send(str(wsMessage1));
 
     const wsMessage2 = {
@@ -43,8 +38,18 @@ const addShipsHandler = (msgData: {
       id: 0
     }
 
-    console.log(":>>>2", wsMessage2)
     clientsDB[id].send(str(wsMessage2));
+
+    const wsMessage = {
+      type: MessageType.TURN,
+      data: str({
+        currentPlayer: firstPlayerShips.indexPlayer
+      }),
+      id: 0
+    }
+    clientsDB[id].send(str(wsMessage));
+    clientsDB[firstPlayerShips.indexPlayer].send(str(wsMessage));
+
 
     gamesDB.push({
       gameId: lastIndex(gamesDB, IndexedFieldsType.GAME) + 1,
@@ -58,11 +63,8 @@ const addShipsHandler = (msgData: {
       winPlayer: NaN
     })
 
-    // console.log("gamesDB", gamesDB)
-
     const foundRoomId = roomsDB.findIndex(r => r.roomUsers.some(r => r.index === id))
     roomsDB.splice(foundRoomId, 1);
-    console.log("del ", foundRoomId, roomsDB);
 
 
     if (roomsDB.length) {
@@ -90,31 +92,11 @@ const addShipsHandler = (msgData: {
         data: str([]),
         id: 0
       }
-      // clientsDB[firstPlayerShips.indexPlayer].send(str(wsMessage));
-      // clientsDB[id].send(str(wsMessage));
 
       for (const key in clientsDB) {
         clientsDB[key].send(str(wsMessage));
       }
-
     }
-
-
-
-
-    // clientsDB[firstPlayerShips.indexPlayer].send(str({
-    //   type: MessageType.TURN,
-    //   data: str({
-    //     currentPlayer: firstPlayerShips.indexPlayer
-    //   })
-    // }));
-    //
-    // clientsDB[id].send(str({
-    //   type: MessageType.TURN,
-    //   data: str({
-    //     currentPlayer: firstPlayerShips.indexPlayer
-    //   })
-    // }));
   }
 
 }

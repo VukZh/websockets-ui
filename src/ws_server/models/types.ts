@@ -32,18 +32,6 @@ export enum IndexedFieldsType {
   GAME = "gameId",
 }
 
-// type UserTypeFEType = {
-//   name: string;
-//   password: string;
-// }
-//
-// type UserTypeBEType = {
-//   index: number;
-//   error: boolean;
-//   errorText: string;
-// }
-// export type UserType = UserTypeFEType & UserTypeBEType;
-
 export type UserType = {
   name: string;
   password: string;
@@ -70,37 +58,11 @@ export type GameType = {
   winPlayer: IndexPlayerType;
 }
 
-// type WinnerType = {
-//   name: string;
-//   wins: number;
-// }
-
-// type RoomType = {
-//   indexRoom: RoomIdType;
-// };
-
 type IndexPlayerType = number;
 
 type GameIdType = number;
 
 type RoomIdType = number;
-
-// type CreatedGameType = {
-//   idGame: GameIdType;
-//   idPlayer: IndexPlayerType;
-// }
-
-// export type RoomBEType = RoomType & CreatedGameType;
-
-// type RoomUserType = {
-//   name: string;
-//   index: number;
-// }
-
-// type UpdatedRoomType = {
-//   roomId: RoomIdType;
-//   roomUsers: Array<RoomUserType>
-// }
 
 type PositionType = {
   x: number;
@@ -121,29 +83,3 @@ export type ShipsType = {
   indexPlayer: IndexPlayerType;
   killed: number;
 }
-
-// type AttackFEType = {
-//   gameId: GameIdType,
-//   x: number,
-//   y: number,
-//   indexPlayer: IndexPlayerType
-// }
-//
-// type AttackBEType = {
-//   position: PositionType,
-//   currentPlayer: IndexPlayerType,
-//   status: StatusType
-// }
-
-// type RandomAttackType = {
-//   gameId: GameIdType,
-//   indexPlayer: IndexPlayerType
-// }
-//
-// type TurnType = {
-//   currentPlayer: IndexPlayerType
-// }
-//
-// type FinishType = {
-//   winPlayer: IndexPlayerType
-// }

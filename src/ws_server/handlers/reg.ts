@@ -17,8 +17,6 @@ const regHandler = (msgData: {
   let errorText = "";
   let index = NaN;
 
-  console.log("usersDB", usersDB)
-
   if (wrongPass) {
     error = true;
     errorText = "wrong password";
@@ -36,19 +34,6 @@ const regHandler = (msgData: {
     })
   }
 
-  // if (userExists) {
-  //   error = true;
-  //   errorText = "user exists";
-  // } else {
-  //   index = id;
-  //   usersDB.push({
-  //     name: msgData.name,
-  //     password: msgData.password,
-  //     index: index,
-  //     wins: 0
-  //   })
-  // }
-
   const data = {
     name: msgData.name,
     index: index,
@@ -60,12 +45,9 @@ const regHandler = (msgData: {
     data: str(data),
     id: 0
   }
-  console.log("..>>..", wsMessage, data, usersDB)
   clientsDB[id].send(str(wsMessage));
-  console.log("rooms in reg", roomsDB)
 
   const noFullRoom = roomsDB.find((r) => r.roomUsers.length === 1);
-  console.log("noFullRoom", noFullRoom);
   if (noFullRoom) {
     const data = [{
       roomId: noFullRoom.roomId,
