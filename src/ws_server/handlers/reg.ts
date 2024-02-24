@@ -25,13 +25,18 @@ const regHandler = (msgData: {
     errorText = "user is playing now";
   } else {
     index = id;
-    usersDB.push({
-      name: msgData.name,
-      password: msgData.password,
-      index: index,
-      wins: 0,
-      isActive: true
-    })
+    if (existedUser) {
+      existedUser.isActive = true;
+      existedUser.index = id;
+    } else {
+      usersDB.push({
+        name: msgData.name,
+        password: msgData.password,
+        index: index,
+        wins: 0,
+        isActive: true
+      })
+    }
   }
 
   const data = {
