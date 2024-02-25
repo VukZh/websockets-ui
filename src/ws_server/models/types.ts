@@ -11,6 +11,7 @@ export enum MessageType {
   ATTACK_R = "randomAttack",
   TURN = "turn",
   FINISH = "finish",
+  BOT = "single_play"
 }
 
 export enum ShipType {
@@ -39,8 +40,17 @@ export type UserType = {
   roomId?: RoomIdType;
   gameId?: GameIdType;
   wins: number;
-  isActive: boolean
+  isActive: boolean;
+}
 
+export type UserVsBotType = Pick<UserType, "name" | "index" | "gameId"> & {
+  ships: Array<ShipsUserType>;
+  openedShips: Array<Array<boolean>>;
+  botId: number;
+  openedBotShips: Array<Array<boolean>>;
+  isCurrentPlayer: boolean;
+  killed: number;
+  botKilled: number;
 }
 
 export type RoomType = {

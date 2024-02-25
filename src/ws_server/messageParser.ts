@@ -6,6 +6,7 @@ import createRoomHandler from "./handlers/createRoom.ts";
 import addUserHandler from "./handlers/addUserToRoom.ts";
 import addShipsHandler from "./handlers/addShips.ts";
 import attackHandler from "./handlers/attack.js";
+import playWithBotHandler from "./handlers/playWithBot.js";
 
 const parser = (msg: RawData, id: number) => {
   try {
@@ -19,10 +20,14 @@ const parser = (msg: RawData, id: number) => {
       addUserHandler(msgData, id);
     } else if (message?.type === MessageType.ADD_S && msgData?.gameId && msgData?.ships && msgData?.indexPlayer) {
       addShipsHandler(msgData, id);
-    } else if (message?.type === MessageType.ATTACK && msgData?.gameId && msgData?.x >=0 && msgData?.y >=0 && msgData?.indexPlayer) {
+    } else if (message?.type === MessageType.ATTACK && msgData?.gameId && msgData?.x >= 0 && msgData?.y >= 0 && msgData?.indexPlayer) {
       attackHandler(msgData);
-     } else if (message?.type === MessageType.ATTACK_R && msgData?.gameId && msgData?.indexPlayer) {
+    } else if (message?.type === MessageType.ATTACK_R && msgData?.gameId && msgData?.indexPlayer) {
       attackHandler(msgData, true);
+    } else if (message?.type === MessageType.BOT
+      || message?.type === MessageType.ADD_S && msgData?.gameId === 0
+      || message?.type === MessageType.ATTACK && msgData?.gameId === 0) {
+      playWithBotHandler(message, id);
     }
   } catch (e) {
     console.log(e.message)
