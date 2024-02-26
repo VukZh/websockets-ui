@@ -225,6 +225,8 @@ const playWithBotHandler = async (message: any, id: number, isRandom = false) =>
 
               if (botAttackState === StatusType.MISS) {
 
+                await resolveAttack(delay);
+
                 const wsMessage = {
                   type: MessageType.TURN,
                   data: str({
@@ -233,8 +235,6 @@ const playWithBotHandler = async (message: any, id: number, isRandom = false) =>
                   id: 0
                 }
                 clientsDB[id].send(str(wsMessage));
-
-                await resolveAttack(delay);
 
                 findUserVsBot.isCurrentPlayer = true;
                 break;
