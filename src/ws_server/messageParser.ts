@@ -27,7 +27,7 @@ const parser = (msg: RawData, id: number) => {
     } else if (message?.type === MessageType.BOT
       || message?.type === MessageType.ADD_S && msgData?.gameId === 0
       || message?.type === MessageType.ATTACK && msgData?.gameId === 0) {
-      playWithBotHandler(message, id);
+      playWithBotHandler (message, id);
     }
   } catch (e) {
     console.log(e.message)

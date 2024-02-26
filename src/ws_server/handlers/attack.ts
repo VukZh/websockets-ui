@@ -51,6 +51,7 @@ const attackHandler = (msgData: {
         id: 0
       }
       clientsDB[msgData.indexPlayer].send(str(wsMessage));
+      clientsDB[oppositeShips.indexPlayer].send(str(wsMessage));
     } else {
       oppositeShips.killed++;
       const sheepCoordinates = stateShip(x, y, shipsMatrix(oppositeShips.ships), oppositeShips.openedShips).sheep;
@@ -68,6 +69,7 @@ const attackHandler = (msgData: {
           id: 0
         }
         clientsDB[msgData.indexPlayer].send(str(wsMessage));
+        clientsDB[oppositeShips.indexPlayer].send(str(wsMessage));
       })
       additionalFields(sheepCoordinates).forEach(a => {
         oppositeShips.openedShips[a[0]][a[1]] = true;
@@ -84,6 +86,7 @@ const attackHandler = (msgData: {
           id: 0
         }
         clientsDB[msgData.indexPlayer].send(str(wsMessage));
+        clientsDB[oppositeShips.indexPlayer].send(str(wsMessage));
       })
     }
 

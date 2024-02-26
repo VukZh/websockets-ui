@@ -45,7 +45,6 @@ export type UserType = {
 
 export type UserVsBotType = Pick<UserType, "name" | "index" | "gameId"> & {
   ships: Array<ShipsUserType>;
-  openedShips: Array<Array<boolean>>;
   botId: number;
   openedBotShips: Array<Array<boolean>>;
   isCurrentPlayer: boolean;
