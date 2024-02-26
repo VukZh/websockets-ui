@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "NodeNext",
+    "target": "es5",
+    "esModuleInterop": true,
+    "allowImportingTsExtensions": true
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "files": [
+    "./src/ws_server/index.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+}
