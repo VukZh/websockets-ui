@@ -8,7 +8,7 @@ import usersVsBotDB from "../db/playersVsBot.js";
 import botAttack from "../bot/botAttack.js";
 import checkedField from "../bot/checkedField.js";
 
-const playWithBotHandler = async (message: any, id: number) => {
+const playWithBotHandler = async (message: any, id: number, isRandom = false) => {
 
   const findUser = usersDB.find(u => u.index === id);
   const findUserVsBot = usersVsBotDB.find(u => u.index === id);
@@ -65,11 +65,24 @@ const playWithBotHandler = async (message: any, id: number) => {
 
   }
 
-
-  if (message.type === MessageType.ATTACK && findUserVsBot.isCurrentPlayer) {
+  if ((message.type === MessageType.ATTACK || isRandom) && findUserVsBot.isCurrentPlayer) {
     const msgData = prs(message.data)
     let x = msgData.x;
     let y = msgData.y;
+
+    if (isRandom) {
+      const closedCell = [];
+      for (let i = 0; i < 10; i++) {
+        for (let j = 0; j < 10; j++) {
+          if (!findUserVsBot.openedBotShips[i][j]) {
+            closedCell.push([i, j]);
+          }
+        }
+      }
+      const randomCell = Math.floor(Math.random() * closedCell.length);
+      x = closedCell[randomCell][0];
+      y = closedCell[randomCell][1];
+    }
 
     if (findUserVsBot.openedBotShips[x][y]) {
       return;
@@ -110,21 +123,23 @@ const playWithBotHandler = async (message: any, id: number) => {
 
           const botAttackState = stateShip(x, y, shipsMatrix(findUserVsBot.ships), checkedField).state;
 
-          setTimeout(() => {
-            const wsMessage = {
-              type: MessageType.ATTACK,
-              data: str({
-                position: {
-                  x: x,
-                  y: y,
-                },
-                currentPlayer: 0,
-                status: botAttackState
-              }),
-              id: 0
-            }
-            clientsDB[id].send(str(wsMessage));
-          }, 1000)
+          if (botAttackState !== StatusType.KILLED) {
+            setTimeout(() => {
+              const wsMessage = {
+                type: MessageType.ATTACK,
+                data: str({
+                  position: {
+                    x: x,
+                    y: y,
+                  },
+                  currentPlayer: 0,
+                  status: botAttackState
+                }),
+                id: 0
+              }
+              clientsDB[id].send(str(wsMessage));
+            }, 1000)
+          }
 
 
           if (botAttackState === StatusType.MISS) {
@@ -179,7 +194,7 @@ const playWithBotHandler = async (message: any, id: number) => {
 
             }
 
-            let pause = 2000;
+            let delay = 2000;
 
             do {
               const [x, y] = botAttack(checkedField);
@@ -219,14 +234,14 @@ const playWithBotHandler = async (message: any, id: number) => {
                 }
                 clientsDB[id].send(str(wsMessage));
 
-                await resolveAttack(pause);
+                await resolveAttack(delay);
 
                 findUserVsBot.isCurrentPlayer = true;
                 break;
 
               } else if (botAttackState === StatusType.SHOT) {
 
-                await resolveAttack(pause);
+                await resolveAttack(delay);
 
                 const wsMessage = {
                   type: MessageType.TURN,
@@ -358,7 +373,7 @@ const playWithBotHandler = async (message: any, id: number) => {
     }
     clientsDB[id].send(str(wsMessage));
     usersVsBotDB.length = 0;
-    const clearedCheckedField:Array<Array<boolean>> = Array.from({length: 10}, () => Array.from({length: 10}).fill(false)) as Array<Array<boolean>>;
+    const clearedCheckedField: Array<Array<boolean>> = Array.from({length: 10}, () => Array.from({length: 10}).fill(false)) as Array<Array<boolean>>;
     checkedField.length = 0;
     checkedField.push(...clearedCheckedField)
   }
@@ -373,7 +388,7 @@ const playWithBotHandler = async (message: any, id: number) => {
     }
     clientsDB[id].send(str(wsMessage));
     usersVsBotDB.length = 0;
-    const clearedCheckedField:Array<Array<boolean>> = Array.from({length: 10}, () => Array.from({length: 10}).fill(false)) as Array<Array<boolean>>;
+    const clearedCheckedField: Array<Array<boolean>> = Array.from({length: 10}, () => Array.from({length: 10}).fill(false)) as Array<Array<boolean>>;
     checkedField.length = 0;
     checkedField.push(...clearedCheckedField)
   }
