@@ -5,8 +5,8 @@ import regHandler from "./handlers/reg.ts";
 import createRoomHandler from "./handlers/createRoom.ts";
 import addUserHandler from "./handlers/addUserToRoom.ts";
 import addShipsHandler from "./handlers/addShips.ts";
-import attackHandler from "./handlers/attack.js";
-import playWithBotHandler from "./handlers/playWithBot.js";
+import attackHandler from "./handlers/attack.ts";
+import playWithBotHandler from "./handlers/playWithBot.ts";
 
 const parser = (msg: RawData, id: number) => {
   try {

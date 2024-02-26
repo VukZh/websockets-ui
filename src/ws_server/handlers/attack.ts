@@ -1,9 +1,9 @@
 import gamesDB from "../db/games.ts";
 import shipsDB from "../db/ships.ts";
 import usersDB from "../db/players.ts";
-import {additionalFields, shipsMatrix, stateShip, str} from "../helpers.js";
-import {MessageType, StatusType} from "../models/types.js";
-import clientsDB from "../db/clients.js";
+import {additionalFields, shipsMatrix, stateShip, str} from "../helpers.ts";
+import {MessageType, StatusType} from "../models/types.ts";
+import clientsDB from "../db/clients.ts";
 
 
 const attackHandler = (msgData: {

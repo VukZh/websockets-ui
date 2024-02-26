@@ -1,12 +1,12 @@
-import {MessageType, StatusType} from "../models/types.js";
-import {additionalFields, prs, shipsMatrix, stateShip, str} from "../helpers.js";
-import clientsDB from "../db/clients.js";
-import usersDB from "../db/players.js";
-import botShips from "../bot/ships.js";
-import shipsBot from "../bot/ships.js";
-import usersVsBotDB from "../db/playersVsBot.js";
-import botAttack from "../bot/botAttack.js";
-import checkedField from "../bot/checkedField.js";
+import {MessageType, StatusType} from "../models/types.ts";
+import {additionalFields, prs, shipsMatrix, stateShip, str} from "../helpers.ts";
+import clientsDB from "../db/clients.ts";
+import usersDB from "../db/players.ts";
+import botShips from "../bot/ships.ts";
+import shipsBot from "../bot/ships.ts";
+import usersVsBotDB from "../db/playersVsBot.ts";
+import botAttack from "../bot/botAttack.ts";
+import checkedField from "../bot/checkedField.ts";
 
 const playWithBotHandler = async (message: any, id: number, isRandom = false) => {
 

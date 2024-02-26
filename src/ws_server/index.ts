@@ -1,11 +1,11 @@
 import {WebSocketServer} from "ws";
 import parser from "./messageParser.ts";
-import {getId, str} from "./helpers.js";
-import clients from "./db/clients.js";
+import {getId, str} from "./helpers.ts";
+import clients from "./db/clients.ts";
 import usersDB from "./db/players.ts";
-import gamesDB from "./db/games.js";
-import {MessageType} from "./models/types.js";
-import clientsDB from "./db/clients.js";
+import gamesDB from "./db/games.ts";
+import {MessageType} from "./models/types.ts";
+import clientsDB from "./db/clients.ts";
 
 const wss = new WebSocketServer({port: 3000});
 

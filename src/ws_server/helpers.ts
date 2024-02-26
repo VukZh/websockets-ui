@@ -1,4 +1,4 @@
-import {GameType, IndexedFieldsType, RoomType, ShipsUserType, StatusType, UserType} from "./models/types.js";
+import {GameType, IndexedFieldsType, RoomType, ShipsUserType, StatusType, UserType} from "./models/types.ts";
 
 const str = (obj) => {
   try {

@@ -4,7 +4,7 @@ import gamesDB from "../db/games.ts";
 
 import {IndexedFieldsType, MessageType, ShipsUserType, StatusType} from "../models/types.ts";
 import {lastIndex, str} from "../helpers.ts";
-import roomsDB from "../db/rooms.js";
+import roomsDB from "../db/rooms.ts";
 
 const addShipsHandler = (msgData: {
   gameId: number,
